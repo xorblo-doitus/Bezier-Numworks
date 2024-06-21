@@ -1,11 +1,15 @@
 from math import *
 from ion import *
 from kandinsky import *
+from time import sleep
 
 EMULATED = False
 try: f""; EMULATED = True
 except: pass
 
+FPS = 60
+TPF = 1/FPS
+SPEED = 0.02
 
 a = 0
 p = 1
@@ -38,7 +42,7 @@ def draw(f=quad, max_res=14, callback=false):
     for i in range(1, 2**res, 2):
       if callback():
         return
-      set_pixel(int(200*i/2**res), int(f(i/2**res)*200), color(0, 0, 0))
+      set_pixel(int(320*i/2**res), int(f(i/2**res)*222), color(0, 0, 0))
   return True
 
 
@@ -56,16 +60,16 @@ def move_handle():
     mod = current_handle_i % 4
     if mod == 0:
       global a
-      a+=move/100
+      a += move*SPEED
     elif mod == 1:
       global p
-      p+=move/100
+      p += move*SPEED
     elif mod == 2:
       global q
-      q+=move/100
+      q += move*SPEED
     else:
       global b
-      b+=move/100
+      b += move*SPEED
   
   return move
 
@@ -81,10 +85,14 @@ def update_handle():
 
 def bezier():
   while True:
-    fill_rect(0, 0, 500, 300, color(255, 255, 255))
+    fill_rect(0, 0, 320, 222, color(255, 255, 255))
     if draw(f=quad, max_res=10, callback=update_handle):
       while not update_handle():
-        pass
+        print("pass")
+        sleep(TPF)
+    
+    while update_handle():
+      draw(f=quad, max_res=6, callback=false)
 
 
 if EMULATED and __name__ == "__main__":
