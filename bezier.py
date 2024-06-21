@@ -11,10 +11,13 @@ FPS = 60
 TPF = 1/FPS
 SPEED = 0.02
 
-a = 0
-p = 1
+a_x = 0
+a_y = 0
+p_x = 0.33
+p_y = 1
 q = 123
-b = 0.5
+b_x = 1
+b_y = 0.5
 
 current_handle_i = 0
 handle_keys = {
@@ -30,11 +33,15 @@ def false():
 
 
 def quad(t):
-  return (a - 2*p + b)*t**2 + (2*p - 2*a)*t + a
+  return (a_x - 2*p_x + b_x)*t**2 + (2*p_x - 2*a_x)*t + a_x, (a_y - 2*p_y + b_y)*t**2 + (2*p_y - 2*a_y)*t + a_y
 
 
 def s(t):
-  return sin(2**(4*t))
+  return t, sin(2**(4*t))
+
+
+def fractional_to_screen(x, y):
+  return int(x*320), int(y*222)
 
 
 def draw(f=quad, max_res=14, callback=false):
@@ -42,7 +49,7 @@ def draw(f=quad, max_res=14, callback=false):
     for i in range(1, 2**res, 2):
       if callback():
         return
-      set_pixel(int(320*i/2**res), int(f(i/2**res)*222), color(0, 0, 0))
+      set_pixel(*fractional_to_screen(*f(i/2**res)), color(0, 0, 0))
   return True
 
 
@@ -59,17 +66,17 @@ def move_handle():
   if move:
     mod = current_handle_i % 4
     if mod == 0:
-      global a
-      a += move*SPEED
+      global a_y
+      a_y += move*SPEED
     elif mod == 1:
-      global p
-      p += move*SPEED
+      global p_y
+      p_y += move*SPEED
     elif mod == 2:
       global q
       q += move*SPEED
     else:
-      global b
-      b += move*SPEED
+      global b_y
+      b_y += move*SPEED
   
   return move
 
