@@ -10,7 +10,6 @@ except: pass
 FPS = 60
 TPF = 1/FPS
 SPEED = 0.02
-CLEAR_ON_EDITING = True
 
 a_x = 0
 a_y = 0
@@ -21,6 +20,7 @@ q_y = 0
 b_x = 1
 b_y = 0.5
 
+clear_on_editing = False
 current_handle_i = 0
 handle_keys = {
   KEY_ONE: 0,
@@ -111,6 +111,12 @@ def move_handle():
 def update_handle():
   select_handle()
   
+  global clear_on_editing
+  if keydown(KEY_ANS):
+    clear_on_editing = False
+  elif keydown(KEY_EXE):
+    clear_on_editing = True
+  
   if EMULATED and (keydown(KEY_BACK) or keydown(KEY_HOME) or keydown(KEY_OK)):
     exit()
   
@@ -125,7 +131,7 @@ def bezier(f=cubic):
         sleep(TPF)
     
     while update_handle():
-      if CLEAR_ON_EDITING:
+      if clear_on_editing:
         clear_screen()
       draw(f=f, max_res=6, callback=false)
 
