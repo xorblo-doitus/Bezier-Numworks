@@ -50,7 +50,7 @@ def select_handle():
 
 
 def move_handle():
-  move=int(keydown(KEY_UP))-int(keydown(KEY_DOWN))
+  move=int(keydown(KEY_DOWN))-int(keydown(KEY_UP))
   
   if move:
     mod=current_handle_i % 4
