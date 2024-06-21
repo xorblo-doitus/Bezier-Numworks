@@ -10,6 +10,7 @@ except: pass
 FPS = 60
 TPF = 1/FPS
 SPEED = 0.02
+CLEAR_ON_EDITING = True
 
 a_x = 0
 a_y = 0
@@ -31,6 +32,10 @@ handle_keys = {
 
 def false():
   return False
+
+
+def clear_screen():
+  fill_rect(0, 0, 320, 222, color(255, 255, 255))
 
 
 def quad(t):
@@ -114,12 +119,14 @@ def update_handle():
 
 def bezier(f=cubic):
   while True:
-    fill_rect(0, 0, 320, 222, color(255, 255, 255))
+    clear_screen()
     if draw(f=f, max_res=10, callback=update_handle):
       while not update_handle():
         sleep(TPF)
     
     while update_handle():
+      if CLEAR_ON_EDITING:
+        clear_screen()
       draw(f=f, max_res=6, callback=false)
 
 
