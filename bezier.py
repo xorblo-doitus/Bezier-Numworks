@@ -15,8 +15,8 @@ a_x = 0
 a_y = 0
 p_x = 0.33
 p_y = 1
-q_x = 123
-q_y = 123
+q_x = 0.66
+q_y = 0
 b_x = 1
 b_y = 0.5
 
@@ -35,6 +35,10 @@ def false():
 
 def quad(t):
   return (a_x - 2*p_x + b_x)*t**2 + (2*p_x - 2*a_x)*t + a_x, (a_y - 2*p_y + b_y)*t**2 + (2*p_y - 2*a_y)*t + a_y
+
+
+def cubic(t):
+  return (-a_x + 3*p_x - 3*q_x + b_x)*t**3 + (3*a_x - 6*p_x + 3*q_x)*t**2 + (3*p_x - 3*a_x)*t + a_x, (-a_y + 3*p_y - 3*q_y + b_y)*t**3 + (3*a_y - 6*p_y + 3*q_y)*t**2 + (3*p_y - 3*a_y)*t + a_y
 
 
 def s(t):
@@ -108,15 +112,15 @@ def update_handle():
   return move_handle()
 
 
-def bezier():
+def bezier(f=cubic):
   while True:
     fill_rect(0, 0, 320, 222, color(255, 255, 255))
-    if draw(f=quad, max_res=10, callback=update_handle):
+    if draw(f=f, max_res=10, callback=update_handle):
       while not update_handle():
         sleep(TPF)
     
     while update_handle():
-      draw(f=quad, max_res=6, callback=false)
+      draw(f=f, max_res=6, callback=false)
 
 
 if EMULATED and __name__ == "__main__":
