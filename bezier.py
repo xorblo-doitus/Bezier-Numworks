@@ -10,6 +10,7 @@ except: pass
 FPS = 60
 TPF = 1/FPS
 SPEED = 0.02
+COLOR = color(0, 0, 0)
 
 a_x = 0
 a_y = 0
@@ -39,19 +40,23 @@ def clear_screen():
 
 
 def quad(t):
-  return (a_x - 2*p_x + b_x)*t**2 + (2*p_x - 2*a_x)*t + a_x, (a_y - 2*p_y + b_y)*t**2 + (2*p_y - 2*a_y)*t + a_y
+  return (a_x - 2*p_x + b_x)*t**2 + (2*p_x - 2*a_x)*t + a_x, (a_y - 2*p_y + b_y)*t**2 + (2*p_y - 2*a_y)*t + a_y, COLOR
 
 
 def cubic(t):
-  return (-a_x + 3*p_x - 3*q_x + b_x)*t**3 + (3*a_x - 6*p_x + 3*q_x)*t**2 + (3*p_x - 3*a_x)*t + a_x, (-a_y + 3*p_y - 3*q_y + b_y)*t**3 + (3*a_y - 6*p_y + 3*q_y)*t**2 + (3*p_y - 3*a_y)*t + a_y
+  return (-a_x + 3*p_x - 3*q_x + b_x)*t**3 + (3*a_x - 6*p_x + 3*q_x)*t**2 + (3*p_x - 3*a_x)*t + a_x, (-a_y + 3*p_y - 3*q_y + b_y)*t**3 + (3*a_y - 6*p_y + 3*q_y)*t**2 + (3*p_y - 3*a_y)*t + a_y, COLOR
+
+
+def cubic_rainbow(t):
+  return (-a_x + 3*p_x - 3*q_x + b_x)*t**3 + (3*a_x - 6*p_x + 3*q_x)*t**2 + (3*p_x - 3*a_x)*t + a_x, (-a_y + 3*p_y - 3*q_y + b_y)*t**3 + (3*a_y - 6*p_y + 3*q_y)*t**2 + (3*p_y - 3*a_y)*t + a_y, color(int(200*t), int(200*(1-t)), int(sin(t*5)*200))
 
 
 def s(t):
-  return t, sin(2**(4*t))
+  return t, sin(2**(4*t)), COLOR
 
 
-def fractional_to_screen(x, y):
-  return int(x*320), int(y*222)
+def fractional_to_screen(x, y, c):
+  return int(x*320), int(y*222), c
 
 
 def draw(f=quad, max_res=14, callback=false):
@@ -59,7 +64,8 @@ def draw(f=quad, max_res=14, callback=false):
     for i in range(1, 2**res, 2):
       if callback():
         return
-      set_pixel(*fractional_to_screen(*f(i/2**res)), color(0, 0, 0))
+      set_pixel(*fractional_to_screen(*f(i/2**res)))
+      
   return True
 
 
