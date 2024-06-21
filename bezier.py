@@ -4,7 +4,7 @@ from kandinsky import *
 from time import sleep
 
 EMULATED = False
-try: f""; EMULATED = True
+try: import os; EMULATED = True; print("Emulated")
 except: pass
 
 FPS = 60
