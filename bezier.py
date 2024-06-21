@@ -7,12 +7,12 @@ try: f""; EMULATED = True
 except: pass
 
 
-a=0
-p=1
-q=123
-b=0.5
+a = 0
+p = 1
+q = 123
+b = 0.5
 
-current_handle_i=0
+current_handle_i = 0
 handle_keys = {
   KEY_ONE: 0,
   KEY_TWO: 1,
@@ -34,11 +34,11 @@ def s(t):
 
 
 def draw(f=quad, max_res=14, callback=false):
-  for res in range(1,max_res):
-    for i in range(1,2**res,2):
+  for res in range(1, max_res):
+    for i in range(1, 2**res, 2):
       if callback():
         return
-      set_pixel(int(200*i/2**res),int(f(i/2**res)*200),color(0,0,0))
+      set_pixel(int(200*i/2**res), int(f(i/2**res)*200), color(0, 0, 0))
   return True
 
 
@@ -50,17 +50,17 @@ def select_handle():
 
 
 def move_handle():
-  move=int(keydown(KEY_DOWN))-int(keydown(KEY_UP))
+  move = int(keydown(KEY_DOWN)) - int(keydown(KEY_UP))
   
   if move:
-    mod=current_handle_i % 4
-    if mod==0:
+    mod = current_handle_i % 4
+    if mod == 0:
       global a
       a+=move/100
-    elif mod==1:
+    elif mod == 1:
       global p
       p+=move/100
-    elif mod==2:
+    elif mod == 2:
       global q
       q+=move/100
     else:
@@ -81,8 +81,8 @@ def update_handle():
 
 def bezier():
   while True:
-    fill_rect(0,0,500,300,color(255,255,255))
-    if draw(f=quad, max_res=10,callback=update_handle):
+    fill_rect(0, 0, 500, 300, color(255, 255, 255))
+    if draw(f=quad, max_res=10, callback=update_handle):
       while not update_handle():
         pass
 
