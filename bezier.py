@@ -88,7 +88,6 @@ def bezier():
     fill_rect(0, 0, 320, 222, color(255, 255, 255))
     if draw(f=quad, max_res=10, callback=update_handle):
       while not update_handle():
-        print("pass")
         sleep(TPF)
     
     while update_handle():
