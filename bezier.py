@@ -15,7 +15,8 @@ a_x = 0
 a_y = 0
 p_x = 0.33
 p_y = 1
-q = 123
+q_x = 123
+q_y = 123
 b_x = 1
 b_y = 0.5
 
@@ -61,24 +62,41 @@ def select_handle():
 
 
 def move_handle():
-  move = int(keydown(KEY_DOWN)) - int(keydown(KEY_UP))
+  move_y = int(keydown(KEY_DOWN)) - int(keydown(KEY_UP))
   
-  if move:
+  if move_y:
     mod = current_handle_i % 4
     if mod == 0:
       global a_y
-      a_y += move*SPEED
+      a_y += move_y*SPEED
     elif mod == 1:
       global p_y
-      p_y += move*SPEED
+      p_y += move_y*SPEED
     elif mod == 2:
-      global q
-      q += move*SPEED
+      global q_y
+      q_y += move_y*SPEED
     else:
       global b_y
-      b_y += move*SPEED
+      b_y += move_y*SPEED
   
-  return move
+  move_x = int(keydown(KEY_RIGHT)) - int(keydown(KEY_LEFT))
+  
+  if move_x:
+    mod = current_handle_i % 4
+    if mod == 0:
+      global a_x
+      a_x += move_x*SPEED
+    elif mod == 1:
+      global p_x
+      p_x += move_x*SPEED
+    elif mod == 2:
+      global q_x
+      q_x += move_x*SPEED
+    else:
+      global b_x
+      b_x += move_x*SPEED
+  
+  return move_x or move_y
 
 
 def update_handle():
