@@ -53,6 +53,9 @@ def update_handle():
       global b
       b+=move/100
   
+  if EMULATED and (keydown(KEY_BACK) or keydown(KEY_HOME)):
+    exit()
+  
   return move
 
 
