@@ -77,7 +77,7 @@ def move_handle():
 def update_handle():
   select_handle()
   
-  if EMULATED and (keydown(KEY_BACK) or keydown(KEY_HOME)):
+  if EMULATED and (keydown(KEY_BACK) or keydown(KEY_HOME) or keydown(KEY_OK)):
     exit()
   
   return move_handle()
