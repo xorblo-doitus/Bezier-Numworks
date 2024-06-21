@@ -9,9 +9,16 @@ except: pass
 
 a=0
 p=1
+q=123
 b=0.5
 
 current_handle_i=0
+handle_keys = {
+  KEY_ONE: 0,
+  KEY_TWO: 1,
+  KEY_FIVE: 2,
+  KEY_THREE: 3,
+}
 
 
 def false():
@@ -35,28 +42,41 @@ def draw(f=quad, max_res=14, callback=false):
   return True
 
 
-def update_handle():
+def select_handle():
   global current_handle_i
-  current_handle_i+=int(keydown(KEY_RIGHT))-int(keydown(KEY_LEFT))
-  
+  for key in handle_keys:
+    if keydown(key):
+      current_handle_i = handle_keys[key]
+
+
+def move_handle():
   move=int(keydown(KEY_UP))-int(keydown(KEY_DOWN))
   
   if move:
-    mod=current_handle_i % 3
+    mod=current_handle_i % 4
     if mod==0:
       global a
       a+=move/100
     elif mod==1:
       global p
       p+=move/100
+    elif mod==2:
+      global q
+      q+=move/100
     else:
       global b
       b+=move/100
   
+  return move
+
+
+def update_handle():
+  select_handle()
+  
   if EMULATED and (keydown(KEY_BACK) or keydown(KEY_HOME)):
     exit()
   
-  return move
+  return move_handle()
 
 
 def bezier():
