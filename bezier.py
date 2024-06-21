@@ -11,6 +11,8 @@ a=0
 p=1
 b=0.5
 
+current_handle_i=0
+
 
 def false():
   return False
@@ -32,15 +34,15 @@ def draw(f=quad, max_res=14, callback=false):
       set_pixel(int(200*i/2**res),int(f(i/2**res)*200),color(0,0,0))
   return True
 
-handle_i=0
+
 def update_handle():
-  global handle_i
-  handle_i+=int(keydown(KEY_RIGHT))-int(keydown(KEY_LEFT))
+  global current_handle_i
+  current_handle_i+=int(keydown(KEY_RIGHT))-int(keydown(KEY_LEFT))
   
   move=int(keydown(KEY_UP))-int(keydown(KEY_DOWN))
   
   if move:
-    mod=handle_i % 3
+    mod=current_handle_i % 3
     if mod==0:
       global a
       a+=move/100
