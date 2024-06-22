@@ -11,6 +11,10 @@ FPS = 60
 TPF = 1/FPS
 SPEED = 0.02
 COLOR = color(0, 0, 0)
+BG_COLOR = color(255, 255, 255)
+HANDLE_COLOR = color(100, 100, 100)
+HANDLE_COLOR_SEC = color(0, 200, 0)
+HANDLE_SIZE = 4
 
 a_x = 0
 a_y = 0
@@ -29,6 +33,7 @@ handle_keys = {
   KEY_FIVE: 2,
   KEY_THREE: 3,
 }
+handle_strings = ["a", "p", "q", "b"]
 
 
 def false():
@@ -36,7 +41,9 @@ def false():
 
 
 def clear_screen():
-  fill_rect(0, 0, 320, 222, color(255, 255, 255))
+  fill_rect(0, 0, 320, 222, BG_COLOR)
+  draw_handles()
+  draw_current_handle()
 
 
 def quad(t):
@@ -69,11 +76,31 @@ def draw(f=quad, max_res=14, callback=false):
   return True
 
 
+def draw_handle(x, y, c=HANDLE_COLOR):
+  x=x*320
+  y=y*222
+  fill_rect(int(x-HANDLE_SIZE), int(y), int(2*HANDLE_SIZE), 1, c)
+  fill_rect(int(x), int(y-HANDLE_SIZE), 1, int(2*HANDLE_SIZE), c)
+
+
+def draw_handles():
+  draw_handle(a_x, a_y)
+  draw_handle(p_x, p_y, HANDLE_COLOR_SEC)
+  draw_handle(q_x, q_y, HANDLE_COLOR_SEC)
+  draw_handle(b_x, b_y)
+
+
+def draw_current_handle():
+  draw_string(handle_strings[current_handle_i], 0, 0, COLOR, BG_COLOR)
+
+
 def select_handle():
   global current_handle_i
   for key in handle_keys:
     if keydown(key):
       current_handle_i = handle_keys[key]
+      draw_current_handle()
+      return
 
 
 def move_handle():
@@ -126,7 +153,10 @@ def update_handle():
   if EMULATED and (keydown(KEY_BACK) or keydown(KEY_HOME) or keydown(KEY_OK)):
     exit()
   
-  return move_handle()
+  if move_handle():
+    if current_handle_i == 1 or current_handle_i == 2:
+      draw_handles()
+    return True
 
 
 def bezier(f=cubic):
