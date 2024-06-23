@@ -74,12 +74,16 @@ class Handle:
     fill_rect(x - self.size, y, self.size * 2, 1, self.color)
     fill_rect(x, y - self.size, 1, self.size * 2, self.color)
 
+a = Handle(0, 0, "a", KEY_ONE, HANDLE_COLOR)
+p = Handle(0.33, 1, "p", KEY_TWO, HANDLE_COLOR)
+q = Handle(0.66, 0, "q", KEY_FIVE, HANDLE_COLOR)
+b = Handle(1, 0.5, "b", KEY_THREE, HANDLE_COLOR)
 
 Handle.handles = [
-  Handle(0, 0, "a", KEY_ONE, HANDLE_COLOR),
-  Handle(0.33, 1, "p", KEY_TWO, HANDLE_COLOR),
-  Handle(0.66, 0, "q", KEY_FIVE, HANDLE_COLOR),
-  Handle(1, 0.5, "b", KEY_THREE, HANDLE_COLOR),
+  a,
+  p,
+  q,
+  b,
 ]
 
 clear_on_editing = False
@@ -96,15 +100,15 @@ def clear_screen():
 
 
 def quad(t):
-  return (Handle.handles[0].x - 2*Handle.handles[1].x + Handle.handles[3].x)*t**2 + (2*Handle.handles[1].x - 2*Handle.handles[0].x)*t + Handle.handles[0].x, (Handle.handles[0].y - 2*Handle.handles[1].y + Handle.handles[3].y)*t**2 + (2*Handle.handles[1].y - 2*Handle.handles[0].y)*t + Handle.handles[0].y, COLOR
+  return (a.x - 2*p.x + b.x)*t**2 + (2*p.x - 2*a.x)*t + a.x, (a.y - 2*p.y + b.y)*t**2 + (2*p.y - 2*a.y)*t + a.y, COLOR
 
 
 def cubic(t):
-  return (-Handle.handles[0].x + 3*Handle.handles[1].x - 3*Handle.handles[2].x + Handle.handles[3].x)*t**3 + (3*Handle.handles[0].x - 6*Handle.handles[1].x + 3*Handle.handles[2].x)*t**2 + (3*Handle.handles[1].x - 3*Handle.handles[0].x)*t + Handle.handles[0].x, (-Handle.handles[0].y + 3*Handle.handles[1].y - 3*Handle.handles[2].y + Handle.handles[3].y)*t**3 + (3*Handle.handles[0].y - 6*Handle.handles[1].y + 3*Handle.handles[2].y)*t**2 + (3*Handle.handles[1].y - 3*Handle.handles[0].y)*t + Handle.handles[0].y, COLOR
+  return (-a.x + 3*p.x - 3*q.x + b.x)*t**3 + (3*a.x - 6*p.x + 3*q.x)*t**2 + (3*p.x - 3*a.x)*t + a.x, (-a.y + 3*p.y - 3*q.y + b.y)*t**3 + (3*a.y - 6*p.y + 3*q.y)*t**2 + (3*p.y - 3*a.y)*t + a.y, COLOR
 
 
 def cubic_rainbow(t):
-  return (-Handle.handles[0].x + 3*Handle.handles[1].x - 3*Handle.handles[2].x + Handle.handles[3].x)*t**3 + (3*Handle.handles[0].x - 6*Handle.handles[1].x + 3*Handle.handles[2].x)*t**2 + (3*Handle.handles[1].x - 3*Handle.handles[0].x)*t + Handle.handles[0].x, (-Handle.handles[0].y + 3*Handle.handles[1].y - 3*Handle.handles[2].y + Handle.handles[3].y)*t**3 + (3*Handle.handles[0].y - 6*Handle.handles[1].y + 3*Handle.handles[2].y)*t**2 + (3*Handle.handles[1].y - 3*Handle.handles[0].y)*t + Handle.handles[0].y, color(int(200*t), int(200*(1-t)), int(sin(t*5)*200))
+  return (-a.x + 3*p.x - 3*q.x + b.x)*t**3 + (3*a.x - 6*p.x + 3*q.x)*t**2 + (3*p.x - 3*a.x)*t + a.x, (-a.y + 3*p.y - 3*q.y + b.y)*t**3 + (3*a.y - 6*p.y + 3*q.y)*t**2 + (3*p.y - 3*a.y)*t + a.y, color(int(200*t), int(200*(1-t)), int(sin(t*5)*200))
 
 
 def s(t):
