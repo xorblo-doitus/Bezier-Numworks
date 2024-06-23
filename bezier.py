@@ -16,8 +16,10 @@ SPEED = 0.02
 COLOR = color(0, 0, 0)
 BG_COLOR = color(255, 255, 255)
 HANDLE_COLOR = color(100, 100, 100)
+SELECTED_HANDLE_COLOR = color(255, 100, 100)
 HANDLE_COLOR_SEC = color(0, 200, 0)
-DEFAULT_HANDLE_SIZE = 4
+SELECTED_HANDLE_COLOR_SEC = color(255, 200, 0)
+DEFAULT_HANDLE_SIZE = 6
 
 
 class Handle:
@@ -28,6 +30,7 @@ class Handle:
   @classmethod
   def set_current_handle(cls, i: int):
     cls.current_handle_i = i % max(1, len(cls.handles))
+    cls.draw_handles()
   
   
   @classmethod
@@ -37,13 +40,16 @@ class Handle:
   
   @classmethod
   def draw_handles(cls) -> "Handle":
-    for handle in cls.handles:
-      handle.draw()
+    for i, handle in enumerate(cls.handles):
+      if i == cls.current_handle_i:
+        handle.draw_selected()
+      else:
+        handle.draw()
   
   
-  @classmethod
-  def draw_current_handle_name(cls) -> "Handle":
-    cls.get_current_handle().draw_name()
+  # @classmethod
+  # def draw_current_handle(cls) -> "Handle":
+  #   cls.get_current_handle().draw_selected()
   
   
   @classmethod
@@ -51,16 +57,16 @@ class Handle:
     for i, handle in enumerate(cls.handles):
       if keydown(handle.keycode):
         cls.set_current_handle(i)
-        handle.draw_name()
         return
   
   
-  def __init__(self, x: float, y: float, name: str, keycode: int, color: "ColorOutput", size: int = DEFAULT_HANDLE_SIZE) -> None:
+  def __init__(self, x: float, y: float, name: str, keycode: int, color: "ColorOutput", selected_color: "ColorOutput", size: int = DEFAULT_HANDLE_SIZE) -> None:
     self.x = x
     self.y = y
     self.name = name
     self.keycode = keycode
     self.color = color
+    self.selected_color = selected_color
     self.size = size
   
   
@@ -68,16 +74,26 @@ class Handle:
     draw_string(self.name, x, y, self.color, BG_COLOR)
   
   
-  def draw(self):
+  def draw(self, color=None):
+    if color is None:
+      color = self.color
+      
     x = int(self.x * SCREEN_WIDTH)
     y = int(self.y * SCREEN_HEIGHT)
-    fill_rect(x - self.size, y, self.size * 2, 1, self.color)
-    fill_rect(x, y - self.size, 1, self.size * 2, self.color)
+    
+    fill_rect(x - self.size, y, self.size * 2, 1, color)
+    fill_rect(x, y - self.size, 1, self.size * 2, color)
+  
+  
+  def draw_selected(self):
+    self.draw_name()
+    self.draw(self.selected_color)
 
-a = Handle(0, 0, "a", KEY_ONE, HANDLE_COLOR)
-p = Handle(0.33, 1, "p", KEY_TWO, HANDLE_COLOR_SEC)
-q = Handle(0.66, 0, "q", KEY_FIVE, HANDLE_COLOR_SEC)
-b = Handle(1, 0.5, "b", KEY_THREE, HANDLE_COLOR)
+
+a = Handle(0, 0, "a", KEY_ONE, HANDLE_COLOR, SELECTED_HANDLE_COLOR)
+p = Handle(0.33, 1, "p", KEY_TWO, HANDLE_COLOR_SEC, SELECTED_HANDLE_COLOR_SEC)
+q = Handle(0.66, 0, "q", KEY_FIVE, HANDLE_COLOR_SEC, SELECTED_HANDLE_COLOR_SEC)
+b = Handle(1, 0.5, "b", KEY_THREE, HANDLE_COLOR, SELECTED_HANDLE_COLOR)
 
 Handle.handles = [
   a,
@@ -96,7 +112,7 @@ def false():
 def clear_screen():
   fill_rect(0, 0, 320, 222, BG_COLOR)
   Handle.draw_handles()
-  Handle.draw_current_handle_name()
+  # Handle.draw_current_handle()
 
 
 def quad(t):
