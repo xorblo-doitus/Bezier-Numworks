@@ -7,6 +7,9 @@ EMULATED = False
 try: import os; EMULATED = True; print("Emulated")
 except: pass
 
+
+SCREEN_WIDTH = 320
+SCREEN_HEIGHT = 222
 FPS = 60
 TPF = 1/FPS
 SPEED = 0.02
@@ -14,26 +17,72 @@ COLOR = color(0, 0, 0)
 BG_COLOR = color(255, 255, 255)
 HANDLE_COLOR = color(100, 100, 100)
 HANDLE_COLOR_SEC = color(0, 200, 0)
-HANDLE_SIZE = 4
+DEFAULT_HANDLE_SIZE = 4
 
-a_x = 0
-a_y = 0
-p_x = 0.33
-p_y = 1
-q_x = 0.66
-q_y = 0
-b_x = 1
-b_y = 0.5
+
+class Handle:
+  handles: "list[Handle]" = []
+  current_handle_i: int = 0
+  
+  
+  @classmethod
+  def set_current_handle(cls, i: int):
+    cls.current_handle_i = i % max(1, len(cls.handles))
+  
+  
+  @classmethod
+  def get_current_handle(cls) -> "Handle":
+    return cls.handles[cls.current_handle_i]
+  
+  
+  @classmethod
+  def draw_handles(cls) -> "Handle":
+    for handle in cls.handles:
+      handle.draw()
+  
+  
+  @classmethod
+  def draw_current_handle_name(cls) -> "Handle":
+    cls.get_current_handle().draw_name()
+  
+  
+  @classmethod
+  def ui_select_handle(cls):
+    for i, handle in enumerate(cls.handles):
+      if keydown(handle.keycode):
+        cls.set_current_handle(i)
+        handle.draw_name()
+        return
+  
+  
+  def __init__(self, x: float, y: float, name: str, keycode: int, color: "ColorOutput", size: int = DEFAULT_HANDLE_SIZE) -> None:
+    self.x = x
+    self.y = y
+    self.name = name
+    self.keycode = keycode
+    self.color = color
+    self.size = size
+  
+  
+  def draw_name(self, x: int = 0, y: int = 0):
+    draw_string(self.name, x, y, self.color, BG_COLOR)
+  
+  
+  def draw(self):
+    x = int(self.x * SCREEN_WIDTH)
+    y = int(self.y * SCREEN_HEIGHT)
+    fill_rect(x - self.size, y, self.size * 2, 1, self.color)
+    fill_rect(x, y - self.size, 1, self.size * 2, self.color)
+
+
+Handle.handles = [
+  Handle(0, 0, "a", KEY_ONE, HANDLE_COLOR),
+  Handle(0.33, 1, "p", KEY_TWO, HANDLE_COLOR),
+  Handle(0.66, 0, "q", KEY_FIVE, HANDLE_COLOR),
+  Handle(1, 0.5, "b", KEY_THREE, HANDLE_COLOR),
+]
 
 clear_on_editing = False
-current_handle_i = 0
-handle_keys = {
-  KEY_ONE: 0,
-  KEY_TWO: 1,
-  KEY_FIVE: 2,
-  KEY_THREE: 3,
-}
-handle_strings = ["a", "p", "q", "b"]
 
 
 def false():
@@ -42,20 +91,20 @@ def false():
 
 def clear_screen():
   fill_rect(0, 0, 320, 222, BG_COLOR)
-  draw_handles()
-  draw_current_handle()
+  Handle.draw_handles()
+  Handle.draw_current_handle_name()
 
 
 def quad(t):
-  return (a_x - 2*p_x + b_x)*t**2 + (2*p_x - 2*a_x)*t + a_x, (a_y - 2*p_y + b_y)*t**2 + (2*p_y - 2*a_y)*t + a_y, COLOR
+  return (Handle.handles[0].x - 2*Handle.handles[1].x + Handle.handles[3].x)*t**2 + (2*Handle.handles[1].x - 2*Handle.handles[0].x)*t + Handle.handles[0].x, (Handle.handles[0].y - 2*Handle.handles[1].y + Handle.handles[3].y)*t**2 + (2*Handle.handles[1].y - 2*Handle.handles[0].y)*t + Handle.handles[0].y, COLOR
 
 
 def cubic(t):
-  return (-a_x + 3*p_x - 3*q_x + b_x)*t**3 + (3*a_x - 6*p_x + 3*q_x)*t**2 + (3*p_x - 3*a_x)*t + a_x, (-a_y + 3*p_y - 3*q_y + b_y)*t**3 + (3*a_y - 6*p_y + 3*q_y)*t**2 + (3*p_y - 3*a_y)*t + a_y, COLOR
+  return (-Handle.handles[0].x + 3*Handle.handles[1].x - 3*Handle.handles[2].x + Handle.handles[3].x)*t**3 + (3*Handle.handles[0].x - 6*Handle.handles[1].x + 3*Handle.handles[2].x)*t**2 + (3*Handle.handles[1].x - 3*Handle.handles[0].x)*t + Handle.handles[0].x, (-Handle.handles[0].y + 3*Handle.handles[1].y - 3*Handle.handles[2].y + Handle.handles[3].y)*t**3 + (3*Handle.handles[0].y - 6*Handle.handles[1].y + 3*Handle.handles[2].y)*t**2 + (3*Handle.handles[1].y - 3*Handle.handles[0].y)*t + Handle.handles[0].y, COLOR
 
 
 def cubic_rainbow(t):
-  return (-a_x + 3*p_x - 3*q_x + b_x)*t**3 + (3*a_x - 6*p_x + 3*q_x)*t**2 + (3*p_x - 3*a_x)*t + a_x, (-a_y + 3*p_y - 3*q_y + b_y)*t**3 + (3*a_y - 6*p_y + 3*q_y)*t**2 + (3*p_y - 3*a_y)*t + a_y, color(int(200*t), int(200*(1-t)), int(sin(t*5)*200))
+  return (-Handle.handles[0].x + 3*Handle.handles[1].x - 3*Handle.handles[2].x + Handle.handles[3].x)*t**3 + (3*Handle.handles[0].x - 6*Handle.handles[1].x + 3*Handle.handles[2].x)*t**2 + (3*Handle.handles[1].x - 3*Handle.handles[0].x)*t + Handle.handles[0].x, (-Handle.handles[0].y + 3*Handle.handles[1].y - 3*Handle.handles[2].y + Handle.handles[3].y)*t**3 + (3*Handle.handles[0].y - 6*Handle.handles[1].y + 3*Handle.handles[2].y)*t**2 + (3*Handle.handles[1].y - 3*Handle.handles[0].y)*t + Handle.handles[0].y, color(int(200*t), int(200*(1-t)), int(sin(t*5)*200))
 
 
 def s(t):
@@ -76,73 +125,20 @@ def draw(f=quad, max_res=14, callback=false):
   return True
 
 
-def draw_handle(x, y, c=HANDLE_COLOR):
-  x=x*320
-  y=y*222
-  fill_rect(int(x-HANDLE_SIZE), int(y), int(2*HANDLE_SIZE), 1, c)
-  fill_rect(int(x), int(y-HANDLE_SIZE), 1, int(2*HANDLE_SIZE), c)
-
-
-def draw_handles():
-  draw_handle(a_x, a_y)
-  draw_handle(p_x, p_y, HANDLE_COLOR_SEC)
-  draw_handle(q_x, q_y, HANDLE_COLOR_SEC)
-  draw_handle(b_x, b_y)
-
-
-def draw_current_handle():
-  draw_string(handle_strings[current_handle_i], 0, 0, COLOR, BG_COLOR)
-
-
-def select_handle():
-  global current_handle_i
-  for key in handle_keys:
-    if keydown(key):
-      current_handle_i = handle_keys[key]
-      draw_current_handle()
-      return
-
-
 def move_handle():
   move_y = int(keydown(KEY_DOWN)) - int(keydown(KEY_UP))
-  
   if move_y:
-    mod = current_handle_i % 4
-    if mod == 0:
-      global a_y
-      a_y += move_y*SPEED
-    elif mod == 1:
-      global p_y
-      p_y += move_y*SPEED
-    elif mod == 2:
-      global q_y
-      q_y += move_y*SPEED
-    else:
-      global b_y
-      b_y += move_y*SPEED
+    Handle.get_current_handle().y += move_y*SPEED
   
   move_x = int(keydown(KEY_RIGHT)) - int(keydown(KEY_LEFT))
-  
   if move_x:
-    mod = current_handle_i % 4
-    if mod == 0:
-      global a_x
-      a_x += move_x*SPEED
-    elif mod == 1:
-      global p_x
-      p_x += move_x*SPEED
-    elif mod == 2:
-      global q_x
-      q_x += move_x*SPEED
-    else:
-      global b_x
-      b_x += move_x*SPEED
+    Handle.get_current_handle().x += move_x*SPEED
   
   return move_x or move_y
 
 
 def update_handle():
-  select_handle()
+  Handle.ui_select_handle()
   
   global clear_on_editing
   if keydown(KEY_ANS):
@@ -154,8 +150,8 @@ def update_handle():
     exit()
   
   if move_handle():
-    if current_handle_i == 1 or current_handle_i == 2:
-      draw_handles()
+    if Handle.current_handle_i == 1 or Handle.current_handle_i == 2:
+      Handle.draw_handles()
     return True
 
 
