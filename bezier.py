@@ -47,11 +47,6 @@ class Handle:
         handle.draw()
   
   
-  # @classmethod
-  # def draw_current_handle(cls) -> "Handle":
-  #   cls.get_current_handle().draw_selected()
-  
-  
   @classmethod
   def ui_select_handle(cls):
     for i, handle in enumerate(cls.handles):
@@ -112,7 +107,6 @@ def false():
 def clear_screen():
   fill_rect(0, 0, 320, 222, BG_COLOR)
   Handle.draw_handles()
-  # Handle.draw_current_handle()
 
 
 def quad(t):
