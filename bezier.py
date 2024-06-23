@@ -129,11 +129,17 @@ def fractional_to_screen(x, y, c):
   return int(x*320), int(y*222), c
 
 
+DRAW_CALLBACK_INTERVAL = 50
 def draw(f=quad, max_res=14, callback=false):
+  callback_elasped = 0
   for res in range(1, max_res):
     for i in range(1, 2**res, 2):
-      if callback():
-        return
+      callback_elasped = callback_elasped + 1
+      if callback_elasped >= DRAW_CALLBACK_INTERVAL:
+        callback_elasped = 0
+        if callback():
+          return
+      
       set_pixel(*fractional_to_screen(*f(i/2**res)))
       
   return True
