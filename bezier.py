@@ -75,8 +75,8 @@ class Handle:
     fill_rect(x, y - self.size, 1, self.size * 2, self.color)
 
 a = Handle(0, 0, "a", KEY_ONE, HANDLE_COLOR)
-p = Handle(0.33, 1, "p", KEY_TWO, HANDLE_COLOR)
-q = Handle(0.66, 0, "q", KEY_FIVE, HANDLE_COLOR)
+p = Handle(0.33, 1, "p", KEY_TWO, HANDLE_COLOR_SEC)
+q = Handle(0.66, 0, "q", KEY_FIVE, HANDLE_COLOR_SEC)
 b = Handle(1, 0.5, "b", KEY_THREE, HANDLE_COLOR)
 
 Handle.handles = [
